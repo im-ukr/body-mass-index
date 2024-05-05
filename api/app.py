@@ -23,11 +23,17 @@ def index():
 
 @app.route('/calculate_bmi', methods=['POST'])
 def calculate_bmi_route():
-    weight = float(request.form['weight'])
-    height = float(request.form['height'])
-    metric = request.form['metric']
+    data = request.json
+    weight = float(data['weight'])
+    height = float(data['height'])
+    metric = data['metric']
     bmi = calculate_bmi(weight, height, metric)
-    return jsonify({'bmi': bmi})
+    response = jsonify({'bmi': bmi})
+    # Set CORS headers
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'POST')
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
