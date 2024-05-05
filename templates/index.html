@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 50px;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            margin-top: 20px;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+            margin-right: 10px;
+            text-align: right;
+        }
+        input[type="number"], select {
+            width: 100px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>BMI Calculator</h1>
+    <form id="bmiForm">
+        <label for="weight">Weight:</label>
+        <input type="number" id="weight" name="weight" step="any" required>
+        <span id="weightUnit">kg</span><br><br>
+        <label for="height">Height:</label>
+        <input type="number" id="height" name="height" step="any" required>
+        <span id="heightUnit">m</span><br><br>
+        <label for="metric">Metric:</label>
+        <select id="metric" name="metric">
+            <option value="metric">Metric</option>
+            <option value="english">English</option>
+        </select><br><br>
+        <button type="button" id="calculateBtn">Calculate BMI</button>
+        <button type="button" id="clearBtn">Clear</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            var form = document.getElementById('bmiForm');
+            var formData = new FormData(form);
+            fetch('http://127.0.0.1:5000/calculate_bmi', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Your BMI is: ' + data.bmi.toFixed(2);
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            document.getElementById('bmiForm').reset();
+            document.getElementById('result').innerText = '';
+        });
+
+        document.getElementById('metric').addEventListener('change', function() {
+            var weightUnit = document.getElementById('weightUnit');
+            var heightUnit = document.getElementById('heightUnit');
+            if (this.value === 'english') {
+                weightUnit.innerText = 'lbs';
+                heightUnit.innerText = 'in';
+            } else {
+                weightUnit.innerText = 'kg';
+                heightUnit.innerText = 'm';
+            }
+        });
+    </script>
+</body>
+</html>
