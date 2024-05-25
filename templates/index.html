@@ -32,6 +32,11 @@
             text-align: center;
             max-width: 400px;
             width: 90%;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         h1 {
             margin: 0 0 20px;
@@ -45,12 +50,23 @@
         label {
             font-size: 1rem;
             color: #555;
+            display: flex;
+            justify-content: space-between;
         }
         input[type="number"], select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1rem;
+            width: calc(100% - 110px);
+            margin-left: 10px;
+        }
+        input[type="number"]:invalid {
+            border-color: red;
+        }
+        input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
         }
         .button-container {
             display: flex;
@@ -62,6 +78,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
+            transition: background-color 0.3s;
         }
         button#calculateBtn {
             background-color: #28a745;
@@ -90,6 +107,9 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            input[type="number"], select {
+                width: calc(100% - 10px);
+            }
         }
     </style>
 </head>
@@ -100,18 +120,24 @@
     </video>
     <div class="container">
         <h1>BMI Calculator</h1>
-        <form id="bmiForm">
-            <label for="weight">Weight:</label>
-            <input type="number" id="weight" name="weight" step="any" required placeholder="Enter weight">
-            <span id="weightUnit">kg</span><br>
-            <label for="height">Height:</label>
-            <input type="number" id="height" name="height" step="any" required placeholder="Enter height">
-            <span id="heightUnit">m</span><br>
-            <label for="metric">Metric:</label>
-            <select id="metric" name="metric">
-                <option value="metric">Metric</option>
-                <option value="english">English</option>
-            </select><br>
+        <form id="bmiForm" novalidate>
+            <label for="weight">
+                Weight:
+                <input type="number" id="weight" name="weight" step="any" min="0" required placeholder="Enter weight">
+                <span id="weightUnit">kg</span>
+            </label>
+            <label for="height">
+                Height:
+                <input type="number" id="height" name="height" step="any" min="0" required placeholder="Enter height">
+                <span id="heightUnit">m</span>
+            </label>
+            <label for="metric">
+                Metric:
+                <select id="metric" name="metric">
+                    <option value="metric">Metric</option>
+                    <option value="english">English</option>
+                </select>
+            </label>
             <div class="button-container">
                 <button type="button" id="calculateBtn">Calculate BMI</button>
                 <button type="button" id="clearBtn" class="clearBtn">Clear</button>
@@ -125,8 +151,8 @@
             var weight = document.getElementById('weight').value;
             var height = document.getElementById('height').value;
             var metric = document.getElementById('metric').value;
-            if (!weight || !height) {
-                alert('Please enter both weight and height');
+            if (!weight || !height || weight <= 0 || height <= 0) {
+                alert('Please enter valid positive numbers for both weight and height');
                 return;
             }
             document.getElementById('loading').classList.remove('hidden');
@@ -143,12 +169,18 @@
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('result').classList.remove('hidden');
                 document.getElementById('bmiValue').innerText = data.bmi.toFixed(2);
+            })
+            .catch(error => {
+                document.getElementById('loading').classList.add('hidden');
+                alert('Error calculating BMI. Please try again.');
             });
         });
 
         document.getElementById('clearBtn').addEventListener('click', function() {
             document.getElementById('bmiForm').reset();
             document.getElementById('result').classList.add('hidden');
+            document.getElementById('weight').classList.remove('invalid');
+            document.getElementById('height').classList.remove('invalid');
         });
 
         document.getElementById('metric').addEventListener('change', function() {
@@ -160,6 +192,22 @@
             } else {
                 weightUnit.innerText = 'kg';
                 heightUnit.innerText = 'm';
+            }
+        });
+
+        document.getElementById('weight').addEventListener('input', function() {
+            if (this.value <= 0) {
+                this.classList.add('invalid');
+            } else {
+                this.classList.remove('invalid');
+            }
+        });
+
+        document.getElementById('height').addEventListener('input', function() {
+            if (this.value <= 0) {
+                this.classList.add('invalid');
+            } else {
+                this.classList.remove('invalid');
             }
         });
     </script>
