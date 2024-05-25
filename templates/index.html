@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BMI Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: #f0f2f5;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
         }
         #video-bg {
             position: fixed;
@@ -23,15 +25,17 @@
             width: auto;
             height: auto;
             z-index: -1;
+            opacity: 0.3;
         }
         .container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             text-align: center;
             max-width: 400px;
             width: 90%;
+            backdrop-filter: blur(10px);
             animation: fadeIn 1s ease-in-out;
         }
         @keyframes fadeIn {
@@ -40,7 +44,8 @@
         }
         h1 {
             margin: 0 0 20px;
-            color: #333;
+            color: #fff;
+            font-weight: 600;
         }
         form {
             display: flex;
@@ -49,17 +54,22 @@
         }
         label {
             font-size: 1rem;
-            color: #555;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+        label span {
+            width: 70px; /* Adjust the width to your preference */
         }
         input[type="number"], select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1rem;
-            width: calc(100% - 110px);
-            margin-left: 10px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
         }
         input[type="number"]:invalid {
             border-color: red;
@@ -71,6 +81,7 @@
         .button-container {
             display: flex;
             justify-content: space-between;
+            gap: 10px; /* Add gap between buttons */
         }
         button {
             padding: 10px 20px;
@@ -78,26 +89,28 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
+            color: #fff;
+            width: 48%; /* Make buttons the same width */
         }
         button#calculateBtn {
             background-color: #28a745;
-            color: white;
         }
         button#calculateBtn:hover {
             background-color: #218838;
+            transform: translateY(-2px);
         }
         button#clearBtn {
             background-color: #dc3545;
-            color: white;
         }
         button#clearBtn:hover {
             background-color: #c82333;
+            transform: translateY(-2px);
         }
         #result {
             margin-top: 20px;
             font-size: 1.2rem;
-            color: #333;
+            color: #fff;
         }
         .hidden {
             display: none;
@@ -108,7 +121,7 @@
                 gap: 10px;
             }
             input[type="number"], select {
-                width: calc(100% - 10px);
+                width: 100%;
             }
         }
     </style>
@@ -122,17 +135,17 @@
         <h1>BMI Calculator</h1>
         <form id="bmiForm" novalidate>
             <label for="weight">
-                Weight:
+                <span>Weight:</span>
                 <input type="number" id="weight" name="weight" step="any" min="0" required placeholder="Enter weight">
                 <span id="weightUnit">kg</span>
             </label>
             <label for="height">
-                Height:
+                <span>Height:</span>
                 <input type="number" id="height" name="height" step="any" min="0" required placeholder="Enter height">
                 <span id="heightUnit">m</span>
             </label>
             <label for="metric">
-                Metric:
+                <span>Metric:</span>
                 <select id="metric" name="metric">
                     <option value="metric">Metric</option>
                     <option value="english">English</option>
