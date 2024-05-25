@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BMI Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            overflow: hidden; /* Ensure video covers entire background */
+            background: #f0f2f5;
         }
         #video-bg {
             position: fixed;
@@ -18,57 +22,74 @@
             min-height: 100%;
             width: auto;
             height: auto;
-            z-index: -1; /* Ensure video is behind other content */
+            z-index: -1;
         }
         .container {
-            margin: 50px auto;
-            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent background for readability */
-            color: white; /* Set font color to white */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
         }
         h1 {
-            margin-top: 0;
+            margin: 0 0 20px;
+            color: #333;
         }
         form {
-            text-align: left;
-            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         label {
-            display: inline-block;
-            width: 100px;
-            margin-right: 10px;
-            text-align: right;
+            font-size: 1rem;
+            color: #555;
         }
         input[type="number"], select {
-            width: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button#calculateBtn {
+            background-color: #28a745;
+            color: white;
+        }
+        button#calculateBtn:hover {
+            background-color: #218838;
+        }
+        button#clearBtn {
+            background-color: #dc3545;
+            color: white;
+        }
+        button#clearBtn:hover {
+            background-color: #c82333;
         }
         #result {
             margin-top: 20px;
+            font-size: 1.2rem;
+            color: #333;
         }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
+        .hidden {
+            display: none;
         }
-        button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button.clearBtn {
-            background-color: red; /* Red color for the clear button */
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        button.clearBtn:hover {
-            background-color: rgb(243, 70, 70); /* Red color for the clear button on hover */
+        @media (max-width: 480px) {
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -82,27 +103,34 @@
         <form id="bmiForm">
             <label for="weight">Weight:</label>
             <input type="number" id="weight" name="weight" step="any" required placeholder="Enter weight">
-            <span id="weightUnit">kg</span><br><br>
+            <span id="weightUnit">kg</span><br>
             <label for="height">Height:</label>
             <input type="number" id="height" name="height" step="any" required placeholder="Enter height">
-            <span id="heightUnit">m</span><br><br>
+            <span id="heightUnit">m</span><br>
             <label for="metric">Metric:</label>
             <select id="metric" name="metric">
                 <option value="metric">Metric</option>
                 <option value="english">English</option>
-            </select><br><br>
+            </select><br>
             <div class="button-container">
                 <button type="button" id="calculateBtn">Calculate BMI</button>
                 <button type="button" id="clearBtn" class="clearBtn">Clear</button>
             </div>
         </form>
-        <div id="result"></div>
+        <div id="result" class="hidden">Your BMI is: <span id="bmiValue"></span></div>
+        <div id="loading" class="hidden">Calculating...</div>
     </div>
     <script>
         document.getElementById('calculateBtn').addEventListener('click', function() {
             var weight = document.getElementById('weight').value;
             var height = document.getElementById('height').value;
             var metric = document.getElementById('metric').value;
+            if (!weight || !height) {
+                alert('Please enter both weight and height');
+                return;
+            }
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('result').classList.add('hidden');
             fetch('http://127.0.0.1:5000/calculate_bmi', {
                 method: 'POST',
                 headers: {
@@ -112,13 +140,15 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').innerText = 'Your BMI is: ' + data.bmi.toFixed(2);
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('bmiValue').innerText = data.bmi.toFixed(2);
             });
         });
 
         document.getElementById('clearBtn').addEventListener('click', function() {
             document.getElementById('bmiForm').reset();
-            document.getElementById('result').innerText = '';
+            document.getElementById('result').classList.add('hidden');
         });
 
         document.getElementById('metric').addEventListener('change', function() {
