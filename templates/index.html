@@ -28,7 +28,7 @@
             opacity: 0.3;
         }
         .container {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -59,17 +59,19 @@
             align-items: center;
             color: #fff;
         }
-        label span {
-            width: 70px; /* Adjust the width to your preference */
+        label span:first-child {
+            width: 100px; /* Adjust the width to your preference */
+            text-align: left;
         }
         input[type="number"], select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1rem;
-            width: 100%;
+            width: calc(100% - 120px); /* Adjust to fit inside the container */
             background: rgba(255, 255, 255, 0.5);
             color: #333;
+            margin-left: 20px;
         }
         input[type="number"]:invalid {
             border-color: red;
@@ -122,6 +124,11 @@
             }
             input[type="number"], select {
                 width: 100%;
+                margin-left: 0;
+            }
+            label {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
