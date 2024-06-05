@@ -204,14 +204,14 @@
                 <button type="button" id="clearBtn" class="clearBtn">Clear</button>
             </div>
         </form>
-        <div id="result" class="hidden">Your BMI is: <span id="bmiValue"></span></div>
-        <div id="bmiMeter" class="hidden">
+        <div id="result" class="hidden" aria-live="polite">Your BMI is: <span id="bmiValue"></span></div>
+        <div id="bmiMeter" class="hidden" aria-live="polite">
             <div class="bmi-range underweight">Underweight</div>
             <div class="bmi-range normal">Normal</div>
             <div class="bmi-range overweight">Overweight</div>
             <div class="bmi-range obese">Obese</div>
         </div>
-        <div id="loading" class="hidden">Calculating...</div>
+        <div id="loading" class="hidden" aria-live="polite">Calculating...</div>
     </div>
     <script>
         document.getElementById('calculateBtn').addEventListener('click', function() {
